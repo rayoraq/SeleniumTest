@@ -27,6 +27,7 @@ public class SeleniumTest {
             .startsWith(URL);
     }
 
+    @Test
     public void titleTest() {
         driver.get(URL);
         assertThat(driver.getTitle())
