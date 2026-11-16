@@ -9,6 +9,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,6 +38,20 @@ public class BaseTest {
             Files.copy(screenshot.toPath(), dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException exception) {
             throw new RuntimeException("Не удалось сохранить скриншот для шага: " + step, exception);
+        }
+    }
+
+    protected void shotWithAlert(String step) {
+        Path dir = Paths.get("screenshots");
+        try {
+            Files.createDirectories(dir);
+            String fileName = step.replaceAll("[^a-zA-Zа-яА-Я0-9._-]", "_") + ".png";
+            Robot robot = new Robot();
+            Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+            BufferedImage screenFullImage = robot.createScreenCapture(screenRect);
+            ImageIO.write(screenFullImage, "png", dir.resolve(fileName).toFile());
+        } catch (Exception exception) {
+            throw new RuntimeException("Не удалось сделать скриншот экрана для шага: " + step, exception);
         }
     }
 
