@@ -24,4 +24,17 @@ public class SeleniumTest extends BaseTest {
             .isEqualTo("Официальный сайт ВятГУ");
         shot("2_title_ok");
     }
+
+    @Test
+    public void titleFailDemo() {
+        driver.get(URL);
+        try {
+            assertThat(driver.getTitle())
+                .as("Демонстрация падения при неверном заголовке")
+                .isEqualTo("Неверный заголовок страницы");
+        } catch (AssertionError exception) {
+            shot("fail_titleFailDemo");
+            throw exception;
+        }
+    }
 }
