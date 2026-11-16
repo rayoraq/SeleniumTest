@@ -62,5 +62,11 @@ public class SeleniumTest extends BaseTest {
             )
         );
         targetMenuItem.click();
+
+        wait.until(ExpectedConditions.titleContains("Образовательные стандарты"));
+        assertThat(driver.getTitle())
+            .as("Проверка заголовка страницы образовательных стандартов")
+            .contains("Образовательные стандарты");
+        shot("standards_page_opened");
     }
 }
