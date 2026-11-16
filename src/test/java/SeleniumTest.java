@@ -1,4 +1,5 @@
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.PageLoadStrategy;
@@ -20,6 +21,12 @@ public class SeleniumTest {
     @Test
     public void openSiteTest() {
         driver.get(URL);
+    }
+
+    @Test
+    public void titleTest() {
+        driver.get(URL);
+        Assert.assertEquals("Официальный сайт ВятГУ", driver.getTitle());
     }
 
     @After
