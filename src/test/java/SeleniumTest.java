@@ -101,4 +101,21 @@ public class SeleniumTest extends BaseTest {
             .as("Проверка наличия результатов поиска по слову 'отпуск'")
             .isNotEmpty();
     }
+
+    @Test
+    public void studentSubscriptionValidEmailTest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement studentLink = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//a[contains(@href, 'studentu') and (contains(., 'Студенту') or contains(., 'СТУДЕНТУ'))]")
+            )
+        );
+        studentLink.sendKeys(Keys.ENTER);
+
+        WebElement emailInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.id("email-input"))
+        );
+        shot("student_page_subscription_form");
+    }
 }
