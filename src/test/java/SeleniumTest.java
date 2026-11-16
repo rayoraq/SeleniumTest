@@ -1,3 +1,4 @@
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +25,9 @@ public class SeleniumTest extends BaseTest {
         shot("2_title_ok");
     }
 
+
     @Test
+    @Ignore("демо падения")
     public void titleFailDemo() {
         driver.get(URL);
         assertThat(driver.getTitle())
