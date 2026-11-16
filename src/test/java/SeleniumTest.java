@@ -3,6 +3,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -50,5 +51,9 @@ public class SeleniumTest extends BaseTest {
         WebElement firstLi = wait.until(
             ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"jsddm\"]/li[1]"))
         );
+
+        Actions action = new Actions(driver);
+        action.moveToElement(firstLi).perform();
+        shot("menu_opened");
     }
 }
