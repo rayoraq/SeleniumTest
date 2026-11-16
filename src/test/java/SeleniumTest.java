@@ -17,9 +17,11 @@ public class SeleniumTest extends BaseTest {
     @Test
     public void titleTest() {
         driver.get(URL);
-        shot("check_title");
+        shot("1_open");
+
         assertThat(driver.getTitle())
             .as("Проверка заголовка главной страницы")
             .isEqualTo("Официальный сайт ВятГУ");
+        shot("2_title_ok");
     }
 }
