@@ -1,11 +1,12 @@
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SeleniumTest {
     WebDriver driver;
@@ -21,12 +22,16 @@ public class SeleniumTest {
     @Test
     public void openSiteTest() {
         driver.get(URL);
+        assertThat(driver.getCurrentUrl())
+            .as("Проверка корректности открытого URL")
+            .startsWith(URL);
     }
 
-    @Test
     public void titleTest() {
         driver.get(URL);
-        Assert.assertEquals("Официальный сайт ВятГУ", driver.getTitle());
+        assertThat(driver.getTitle())
+            .as("Проверка заголовка главной страницы")
+            .isEqualTo("Официальный сайт ВятГУ");
     }
 
     @After
