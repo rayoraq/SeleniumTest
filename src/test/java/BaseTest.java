@@ -1,5 +1,7 @@
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.TakesScreenshot;
@@ -31,13 +33,21 @@ public class BaseTest {
             Files.createDirectories(dir);
             String fileName = step.replaceAll("[^a-zA-Zа-яА-Я0-9._-]", "_") + ".png";
             Files.copy(screenshot.toPath(), dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Не удалось сохранить скриншот для шага: " + step, e);
+        } catch (IOException exception) {
+            throw new RuntimeException("Не удалось сохранить скриншот для шага: " + step, exception);
         }
     }
 
-    @After
-    public void quit() {
-        driver.quit();
-    }
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        @Override
+        protected void failed(Throwable throwable, Description description) {
+            shot("FAILED_" + description.getMethodName());
+        }
+
+        @Override
+        protected void finished(Description des) { //т.к. After выполняется раньше чем failed()
+            driver.quit();
+        }
+    };
 }

@@ -18,7 +18,6 @@ public class SeleniumTest extends BaseTest {
     public void titleTest() {
         driver.get(URL);
         shot("1_open");
-
         assertThat(driver.getTitle())
             .as("Проверка заголовка главной страницы")
             .isEqualTo("Официальный сайт ВятГУ");
@@ -28,13 +27,8 @@ public class SeleniumTest extends BaseTest {
     @Test
     public void titleFailDemo() {
         driver.get(URL);
-        try {
-            assertThat(driver.getTitle())
-                .as("Демонстрация падения при неверном заголовке")
-                .isEqualTo("Неверный заголовок страницы");
-        } catch (AssertionError exception) {
-            shot("fail_titleFailDemo");
-            throw exception;
-        }
+        assertThat(driver.getTitle())
+            .as("Демонстрация падения при неверном заголовке")
+            .isEqualTo("Неверный заголовок страницы");
     }
 }
