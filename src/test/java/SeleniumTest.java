@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -117,5 +118,23 @@ public class SeleniumTest extends BaseTest {
             ExpectedConditions.visibilityOfElementLocated(By.id("email-input"))
         );
         shot("student_page_subscription_form");
+
+        String validEmail = "bababab@gmail.com";//подпишем какого-нибудь бедного непонимающего человека
+        emailInput.click();
+        emailInput.clear();
+        emailInput.sendKeys(validEmail);
+        shot("valid_email_entered");
+
+        emailInput.sendKeys(Keys.ENTER);
+
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        String actualText = alert.getText().trim();
+
+        shotWithAlert("valid_email_response");
+        alert.accept();
+
+        assertThat(actualText)
+            .as("Проверка текста в alert при подписке с корректным e-mail")
+            .contains("успешно добавлен в список рассылки новостей");
     }
 }
