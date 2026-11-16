@@ -69,4 +69,16 @@ public class SeleniumTest extends BaseTest {
             .contains("Образовательные стандарты");
         shot("standards_page_opened");
     }
+
+    @Test
+    public void searchVacationTest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement searchInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.name("query"))
+        );
+        searchInput.clear();
+        searchInput.sendKeys("отпуск");
+        shot("search_input_filled");
+    }
 }
