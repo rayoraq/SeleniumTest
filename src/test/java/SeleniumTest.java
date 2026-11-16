@@ -2,12 +2,14 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,5 +82,23 @@ public class SeleniumTest extends BaseTest {
         searchInput.clear();
         searchInput.sendKeys("отпуск");
         shot("search_input_filled");
+
+        searchInput.sendKeys(Keys.ENTER);
+
+        wait.until(ExpectedConditions.urlContains("/search/"));
+        List<WebElement> results = wait.until(
+            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+                By.xpath("//div[contains(@class, 'search')]//a[normalize-space()]")
+            )
+        );
+        shot("search_results");
+
+        assertThat(results)
+            .as("Список результатов поиска не должен быть пустым")
+            .isNotEmpty();
+
+        assertThat(results)
+            .as("Проверка наличия результатов поиска по слову 'отпуск'")
+            .isNotEmpty();
     }
 }
