@@ -137,4 +137,37 @@ public class SeleniumTest extends BaseTest {
             .as("Проверка текста в alert при подписке с корректным e-mail")
             .contains("успешно добавлен в список рассылки новостей");
     }
+
+    @Test
+    public void studentSubscriptionInvalidEmailTest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement studentLink = wait.until(
+            ExpectedConditions.elementToBeClickable(By.cssSelector("a[href*='studentu']"))
+        );
+        studentLink.click();
+
+        WebElement emailInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.id("email-input"))
+        );
+
+        String invalidEmail = "invalid-email";
+        emailInput.click();
+        emailInput.clear();
+        emailInput.sendKeys(invalidEmail);
+        shot("invalid_email_entered");
+
+        emailInput.sendKeys(Keys.ENTER);
+
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        String actualText = alert.getText().trim();
+
+        shotWithAlert("invalid_email_response");
+        alert.accept();
+
+        assertThat(actualText)
+            .as("Проверка текста ошибки в alert при некорректном e-mail")
+            .isNotBlank();
+    }
+
 }
