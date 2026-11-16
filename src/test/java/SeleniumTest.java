@@ -55,5 +55,12 @@ public class SeleniumTest extends BaseTest {
         Actions action = new Actions(driver);
         action.moveToElement(firstLi).perform();
         shot("menu_opened");
+
+        WebElement targetMenuItem = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//*[@id=\"jsddm\"]/li[1]//ul/li[contains(., \"Образовательные стандарты\")]")
+            )
+        );
+        targetMenuItem.click();
     }
 }
