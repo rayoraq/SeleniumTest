@@ -2,6 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -9,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CdsVyatkaTest extends BaseTest {
     private static final String URL = "https://m.cdsvyatka.com/";
@@ -64,5 +67,41 @@ public class CdsVyatkaTest extends BaseTest {
             )
         );
         shot("cds_2_route_on_map");
+
+        WebElement busMarker = wait.until(d -> {
+            List<WebElement> markers = d.findElements(
+                By.cssSelector(
+                    ".leaflet-marker-icon, ymaps[class*='placemark'], [class*='ymaps'][class*='overlay'] img, img[src*='bus'], img[src*='troll']")
+            );
+            for (WebElement m : markers) {
+                if (m.isDisplayed() && m.getSize().getWidth() > 0 && m.getSize().getHeight() > 0) {
+                    return m;
+                }
+            }
+            return null;
+        });
+
+        try {
+            busMarker.click();
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", busMarker);
+        }
+
+        WebElement busPopup = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector(".leaflet-popup-content, " +
+                    ".ymaps-2-1-79-balloon__content, " +
+                    "[class*='popup'], " +
+                    "[class*='balloon']")
+            )
+        );
+        String busInfo = busPopup.getText().trim();
+        System.out.println("Об автобусе");
+        System.out.println(busInfo);
+        shot("cds_3_bus_characteristics");
+
+        assertThat(busInfo)
+            .as("Проверка отображения характеристик автобуса")
+            .isNotBlank();
     }
 }
