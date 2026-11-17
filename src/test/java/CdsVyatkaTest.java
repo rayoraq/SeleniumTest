@@ -42,6 +42,27 @@ public class CdsVyatkaTest extends BaseTest {
         Select routeSelect = new Select(routeSelectEl);
         routeSelect.selectByIndex(1);
         shot("cds_1_route_selected");
-    }
 
+        WebElement mapBtn = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath(
+                    "//*[self::a or self::button " +
+                        "or self::input or self::div " +
+                        "or self::span][contains(normalize-space(.), 'Карта') " +
+                        "or @value='Карта']")
+            )
+        );
+        mapBtn.click();
+
+        wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.xpath(
+                    "//div[contains(@id, 'id_buttonMap') " +
+                        "or contains(@class, 'map') " +
+                        "or contains(@class, 'leaflet-container') " +
+                        "or contains(@class, 'ymaps')]")
+            )
+        );
+        shot("cds_2_route_on_map");
+    }
 }
