@@ -104,4 +104,33 @@ public class CdsVyatkaTest extends BaseTest {
             .as("Проверка отображения характеристик автобуса")
             .isNotBlank();
     }
+
+    @Test
+    public void stopForecastTest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        List<WebElement> selects = wait.until(d -> {
+            List<WebElement> all = d.findElements(By.tagName("select"));
+            return all.size() >= 3 ? all : null;
+        });
+
+        new Select(selects.get(0)).selectByVisibleText("Киров");
+
+        wait.until(d -> new Select(d.findElements(By.tagName("select")).get(1)).getOptions().size() > 2);
+        new Select(driver.findElements(By.tagName("select")).get(1)).selectByIndex(2);
+
+        wait.until(d -> new Select(d.findElements(By.tagName("select")).get(2)).getOptions().size() > 1);
+        new Select(driver.findElements(By.tagName("select")).get(2)).selectByIndex(1);
+
+        WebElement forecastBtn = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//*[self::a " +
+                    "or self::button " +
+                    "or self::input][contains(., 'Прогноз') " +
+                    "or @value='Прогноз']")
+            )
+        );
+        forecastBtn.click();
+        shot("cds_4_forecast_opened");
+    }
 }
