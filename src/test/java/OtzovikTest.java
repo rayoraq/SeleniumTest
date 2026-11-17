@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class OtzovikTest extends BaseTest {
     private static final String URL = "https://otzovik.com";
 
@@ -38,5 +40,25 @@ public class OtzovikTest extends BaseTest {
 
         shot("otzovik_2_suggestions");
         suggestion.click();
+
+        WebElement pageTitle = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.tagName("h1"))
+        );
+        assertThat(pageTitle.getText())
+            .as("Проверка заголовка страницы объекта")
+            .contains("Yandex Metro");
+
+        WebElement reviewsCounter = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.xpath(
+                    "//*[contains(@class, 'reviews-counter') or self::a[contains(., 'Отзывы')]]")
+            )
+        );
+        String counterText = reviewsCounter.getText().trim();
+        shot("otzovik_c3_yandex_metro_page");
+
+        assertThat(counterText)
+            .as("Проверка, что количество отзывов не пусто")
+            .isNotEmpty();
     }
 }
