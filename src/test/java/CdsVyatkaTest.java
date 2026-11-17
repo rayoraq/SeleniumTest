@@ -132,5 +132,30 @@ public class CdsVyatkaTest extends BaseTest {
         );
         forecastBtn.click();
         shot("cds_4_forecast_opened");
+
+        WebElement forecastResult = wait.until(d -> {
+            List<WebElement> blocks = d.findElements(
+                By.xpath("//table[.//td] | //div[contains(@id, 'forecast') " +
+                    "or contains(@class, 'forecast') " +
+                    "or contains(@id, 'result')]")
+            );
+            for (WebElement b : blocks) {
+                String text = b.getText().trim();
+                if (b.isDisplayed() && !text.isEmpty() && text.matches("(?s).*\\d+.*")) {
+                    return b;
+                }
+            }
+            return null;
+        });
+
+        String forecastText = forecastResult.getText().trim();
+        System.out.println("Получение прогноза");
+        System.out.println(forecastText);
+        shot("cds_5_forecast_verified");
+
+        assertThat(forecastText)
+            .as("Проверка наличия номера автобуса и времени ожидания на странице прогноза")
+            .isNotBlank()
+            .containsPattern("\\d+");
     }
 }
