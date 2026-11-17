@@ -28,5 +28,15 @@ public class OtzovikTest extends BaseTest {
         searchInput.clear();
         searchInput.sendKeys("яндекс");
         shot("otzovik_1_search_input");
+
+        WebElement suggestion = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath(
+                    "//div[contains(@class, 'popup-box')]//a[contains(@class, 'popup-obj') and contains(., 'Yandex Metro')]")
+            )
+        );
+
+        shot("otzovik_2_suggestions");
+        suggestion.click();
     }
 }
