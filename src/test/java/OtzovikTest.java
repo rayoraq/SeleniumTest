@@ -6,6 +6,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,5 +92,43 @@ public class OtzovikTest extends BaseTest {
 
         shot("otzovik_4_select_object");
         kirovGardenOption.click();
+
+        WebElement titleInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("input[name*='title'], input[name*='impression'], textarea[name*='title']")
+            )
+        );
+        titleInput.sendKeys("Прекрасное место для прогулок в центре Кирова");
+
+        WebElement previewBtn = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//input[@value='Предпросмотр'] | //button[contains(., 'Предпросмотр')]")
+            )
+        );
+        previewBtn.click();
+
+        WebElement firstError = wait.until(driver -> {
+            List<WebElement> messages = driver.findElements(By.cssSelector(".field-error-msg, .alertframe.error"));
+            for (WebElement msg : messages) {
+                if (msg.isDisplayed() && !msg.getText().trim().isEmpty()) {
+                    return msg;
+                }
+            }
+            return null;
+        });
+
+        String errorText = driver.findElements(By.cssSelector(".field-error-msg, .alertframe.error")).stream()
+            .filter(WebElement::isDisplayed)
+            .map(el -> el.getText().trim())
+            .filter(text -> !text.isEmpty())
+            .collect(Collectors.joining("\n"));
+
+        System.out.println("Ошибки");
+        System.out.println(errorText);
+        shot("otzovik_5_validation_errors");
+
+        assertThat(errorText)
+            .as("Проверка появления сообщений об ошибках валидации при неполном заполнении")
+            .isNotBlank();
     }
 }
