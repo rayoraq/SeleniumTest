@@ -61,4 +61,34 @@ public class OtzovikTest extends BaseTest {
             .as("Проверка, что количество отзывов не пусто")
             .isNotEmpty();
     }
+
+    @Test
+    public void writeReviewValidationTest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement writeReviewBtn = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//a[contains(., 'Написать отзыв') or contains(@href, 'postreview')]")
+            )
+        );
+        writeReviewBtn.click();
+
+        WebElement objectInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("input[type='text'][name*='content_product']")
+            )
+        );
+        objectInput.clear();
+        objectInput.sendKeys("Ботанический сад ВятГУ");
+
+        WebElement kirovGardenOption = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath(
+                    "//a[contains(@class, 'popup-obj') and contains(., 'Ботанический сад') and contains(., 'Киров')]")
+            )
+        );
+
+        shot("otzovik_4_select_object");
+        kirovGardenOption.click();
+    }
 }
